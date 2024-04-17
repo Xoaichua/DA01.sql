@@ -7,3 +7,17 @@ FROM user_transactions)
 select year, product_id,curr_year_spend,prev_year_spend,
 round(100*(curr_year_spend-prev_year_spend)/prev_year_spend,2) as yoy_rate
 from yearly_spend_table
+Ex2
+select card_name, issued_amount from
+(SELECT card_name, issued_amount,
+row_number() over(partition by card_name order by issued_amount) as rank
+FROM monthly_cards_issued) as a
+where rank =1
+order by issued_amount desc
+Ex3
+select user_id, spend, transaction_date from 
+(SELECT *,
+row_number() over(partition by user_id order by transaction_date 
+ asc) as rank
+FROM transactions) as a
+where rank=3
